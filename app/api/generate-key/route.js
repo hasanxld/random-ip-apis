@@ -6,9 +6,31 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
+// CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+}
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders })
+}
+
 export async function POST(request) {
   try {
     const { email } = await request.json()
+    
+    if (!email) {
+      return NextResponse.json({ 
+        success: false,
+        error: 'EMAIL_REQUIRED',
+        message: 'Email address is required to generate API key'
+      }, { 
+        status: 400,
+        headers: corsHeaders 
+      })
+    }
     
     // Generate random API key
     const generateRandomString = (length) => {
@@ -30,7 +52,7 @@ export async function POST(request) {
       .insert([
         { 
           api_key: apiKey,
-          email: email || null
+          email: email
         }
       ])
       .select()
@@ -40,7 +62,10 @@ export async function POST(request) {
       return NextResponse.json({ 
         success: false,
         error: error.message 
-      }, { status: 500 })
+      }, { 
+        status: 500,
+        headers: corsHeaders
+      })
     }
 
     console.log('API key generated successfully:', apiKey);
@@ -48,13 +73,16 @@ export async function POST(request) {
     return NextResponse.json({ 
       success: true, 
       api_key: apiKey,
-      message: 'API key generated successfully'
-    })
+      message: 'API key generated successfully. Please save this key securely.'
+    }, { headers: corsHeaders })
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json({ 
       success: false,
-      error: 'Internal server error' 
-    }, { status: 500 })
+      error: 'INTERNAL_SERVER_ERROR' 
+    }, { 
+      status: 500,
+      headers: corsHeaders
+    })
   }
 }
