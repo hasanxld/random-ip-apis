@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
 
 export default function Dashboard() {
   const [apiKey, setApiKey] = useState('')
@@ -118,4 +118,4 @@ export default function Dashboard() {
       <Footer />
     </div>
   )
-                    }
+}
