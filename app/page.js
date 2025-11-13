@@ -1,3 +1,5 @@
+'use client'
+import { useState, useEffect } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import ApiKeyGenerator from '../components/ApiKeyGenerator'
@@ -5,6 +7,13 @@ import ApiTester from '../components/ApiTester'
 import Link from 'next/link'
 
 export default function Home() {
+  const [baseUrl, setBaseUrl] = useState('')
+
+  useEffect(() => {
+    // Set the current website URL dynamically
+    setBaseUrl(window.location.origin)
+  }, [])
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Header />
@@ -81,7 +90,7 @@ export default function Home() {
             <div>
               <h3 className="text-xl font-semibold mb-4">JavaScript Example</h3>
               <pre className="bg-black p-4 border border-gray-700 overflow-auto text-sm">
-{`fetch('https://yourapp.vercel.app/api/ip/random', {
+{`fetch('${baseUrl}/api/ip/random', {
   headers: {
     'x-api-key': 'your_api_key_here'
   }
@@ -96,13 +105,22 @@ export default function Home() {
               <pre className="bg-black p-4 border border-gray-700 overflow-auto text-sm">
 {`import requests
 
-url = "https://yourapp.vercel.app/api/ip/random"
+url = "${baseUrl}/api/ip/random"
 headers = {"x-api-key": "your_api_key_here"}
 
 response = requests.get(url, headers=headers)
 print(response.json())`}
               </pre>
             </div>
+          </div>
+
+          <div className="text-center mt-8">
+            <Link 
+              href="/documentation"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 font-semibold transition-colors inline-block"
+            >
+              View Full Documentation
+            </Link>
           </div>
         </div>
       </section>
