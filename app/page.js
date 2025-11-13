@@ -1,7 +1,7 @@
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import ApiKeyGenerator from '@/components/ApiKeyGenerator'
-import ApiTester from '@/components/ApiTester'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+import ApiKeyGenerator from '../components/ApiKeyGenerator'
+import ApiTester from '../components/ApiTester'
 import Link from 'next/link'
 
 export default function Home() {
@@ -110,4 +110,4 @@ print(response.json())`}
       <Footer />
     </div>
   )
-        }
+}
