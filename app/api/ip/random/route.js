@@ -6,6 +6,13 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
+// CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, x-api-key',
+}
+
 function generateRandomIP() {
   const types = [
     // IPv4 addresses
@@ -56,6 +63,10 @@ function generateRandomIP() {
   }
 }
 
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders })
+}
+
 export async function GET(request) {
   try {
     const apiKey = request.headers.get('x-api-key') || request.nextUrl.searchParams.get('api_key');
@@ -65,7 +76,10 @@ export async function GET(request) {
         success: false,
         error: 'API_KEY_REQUIRED',
         message: 'API key is required. Please provide your API key in the x-api-key header or api_key query parameter.'
-      }, { status: 401 });
+      }, { 
+        status: 401,
+        headers: corsHeaders
+      });
     }
 
     console.log('Validating API key:', apiKey);
@@ -84,7 +98,10 @@ export async function GET(request) {
         success: false,
         error: 'INVALID_API_KEY',
         message: 'The provided API key is invalid, expired, or not active.'
-      }, { status: 401 });
+      }, { 
+        status: 401,
+        headers: corsHeaders
+      });
     }
 
     console.log('API key validated:', keyData.id);
@@ -122,14 +139,17 @@ export async function GET(request) {
       api_version: '1.0.0'
     };
 
-    return NextResponse.json(response);
+    return NextResponse.json(response, { headers: corsHeaders });
   } catch (error) {
     console.error('API Error:', error);
     return NextResponse.json({ 
       success: false,
       error: 'INTERNAL_SERVER_ERROR',
       message: 'An internal server error occurred. Please try again later.'
-    }, { status: 500 });
+    }, { 
+      status: 500,
+      headers: corsHeaders
+    });
   }
 }
 
