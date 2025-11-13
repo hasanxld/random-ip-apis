@@ -168,7 +168,118 @@ print_r($data);
                 </div>
               </div>
             </section>
+// এই section টি documentation page-এর examples section-এর পরে যোগ করুন
 
+<section id="external-usage">
+  <h2 className="text-2xl font-bold mb-4">External Website Usage</h2>
+  <p className="text-gray-400 mb-4">
+    You can use this API from any website or application. Here are examples for different scenarios:
+  </p>
+
+  <div className="space-y-6">
+    <div>
+      <h4 className="font-semibold mb-2">From Frontend JavaScript</h4>
+      <pre className="bg-gray-900 p-4 border border-gray-800 overflow-auto text-sm">
+{`// Direct fetch from any website
+fetch('${baseUrl}/api/ip/random?api_key=YOUR_API_KEY')
+  .then(response => response.json())
+  .then(data => {
+    console.log('Random IP:', data.data.ip);
+    console.log('Country:', data.data.country);
+  })
+  .catch(error => console.error('Error:', error));`}
+      </pre>
+    </div>
+
+    <div>
+      <h4 className="font-semibold mb-2">From Backend (Node.js)</h4>
+      <pre className="bg-gray-900 p-4 border border-gray-800 overflow-auto text-sm">
+{`const axios = require('axios');
+
+async function getRandomIP() {
+  try {
+    const response = await axios.get('${baseUrl}/api/ip/random', {
+      headers: {
+        'x-api-key': 'YOUR_API_KEY'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('API Error:', error.response?.data);
+  }
+}
+
+// Usage
+getRandomIP().then(data => console.log(data));`}
+      </pre>
+    </div>
+
+    <div>
+      <h4 className="font-semibold mb-2">From PHP Backend</h4>
+      <pre className="bg-gray-900 p-4 border border-gray-800 overflow-auto text-sm">
+{`<?php
+$apiKey = 'YOUR_API_KEY';
+$url = '${baseUrl}/api/ip/random?api_key=' . $apiKey;
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+]);
+
+$response = curl_exec($ch);
+curl_close($ch);
+
+$data = json_decode($response, true);
+echo "IP: " . $data['data']['ip'] . "\\n";
+echo "Country: " . $data['data']['country'] . "\\n";
+?>`}
+      </pre>
+    </div>
+
+    <div>
+      <h4 className="font-semibold mb-2">HTML + JavaScript Example</h4>
+      <pre className="bg-gray-900 p-4 border border-gray-800 overflow-auto text-sm">
+{`<!DOCTYPE html>
+<html>
+<head>
+    <title>Random IP Generator</title>
+</head>
+<body>
+    <button onclick="getRandomIP()">Get Random IP</button>
+    <div id="result"></div>
+
+    <script>
+    async function getRandomIP() {
+        const apiKey = 'YOUR_API_KEY';
+        const url = '${baseUrl}/api/ip/random?api_key=' + apiKey;
+        
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if (data.success) {
+                document.getElementById('result').innerHTML = \\
+                    \`IP: \${data.data.ip}<br>\\
+                     Country: \${data.data.country}<br>\\
+                     ISP: \${data.data.isp}\`;
+            } else {
+                document.getElementById('result').innerHTML = \\
+                    'Error: ' + data.message;
+            }
+        } catch (error) {
+            document.getElementById('result').innerHTML = \\
+                'Network error: ' + error.message;
+        }
+    }
+    </script>
+</body>
+</html>`}
+      </pre>
+    </div>
+  </div>
+</section>
             <section id="responses">
               <h2 className="text-2xl font-bold mb-4">Response Format</h2>
               
